@@ -3,10 +3,11 @@ package operator
 import (
 	"context"
 
-	"k8s.io/klog/v2"
+	"time"
 
 	configv1 "github.com/openshift/api/config/v1"
 	operatorv1 "github.com/openshift/api/operator/v1"
+	"k8s.io/klog/v2"
 )
 
 func (c *serviceCAOperator) syncControllers(ctx context.Context, operatorConfig *operatorv1.ServiceCA, infrastructure *configv1.Infrastructure) error {
@@ -27,6 +28,14 @@ func (c *serviceCAOperator) syncControllers(ctx context.Context, operatorConfig 
 	if err != nil {
 		return err
 	}
+	klog.V(4).Infof("Starting sleep")
+	for i := 0; i < 6; i++ {
+		klog.V(4).Infof("Sleep number: %q", i)
+		time.Sleep(10 * time.Second)
+	}
+
+	klog.V(4).Infof("Ending sleep")
+
 	// Sync the CA bundle. This will be updated if the CA has changed.
 	_, err = c.manageSignerCABundle(ctx, caModified)
 	if err != nil {

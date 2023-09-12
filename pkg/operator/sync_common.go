@@ -173,7 +173,7 @@ func (c *serviceCAOperator) manageSignerCABundle(ctx context.Context, forceUpdat
 	if !forceUpdate {
 		// We don't need to force an update; return if the configmap already exists (or error getting).
 		_, err := c.corev1Client.ConfigMaps(configMap.Namespace).Get(ctx, configMap.Name, metav1.GetOptions{})
-		if !apierrors.IsNotFound(err) {
+		if !apierrors.IsNotFound(err) { // If the CA is found (No ERROR) or there is any other kind of error, return err.
 			return false, err
 		}
 	}
